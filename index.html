@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Comprehension</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+        }
+        h1 {
+            color: #333;
+        }
+        .logo {
+            width: 100px;
+            margin-top: 20px;
+        }
+        .passage {
+            font-size: 20px;
+            margin: 20px;
+            color: #555;
+            line-height: 1.5;
+        }
+        .question {
+            font-size: 18px;
+            margin: 10px 0;
+            color: blue; /* Changed to blue */
+        }
+        .options {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            margin: 10px 0;
+        }
+        .option {
+            margin: 5px;
+            padding: 10px;
+            border: 2px solid #333;
+            border-radius: 5px;
+            background-color: #e7f3fe;
+            cursor: pointer;
+            text-align: left;
+        }
+        .option:hover {
+            background-color: #cce5ff;
+        }
+        .feedback {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .more-lessons-btn {
+            margin-top: 80px; /* Adjusted to maintain position */
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .more-lessons-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Logo -->
+<img src="https://i.imgur.com/mwpTHJj.png" class="logo" alt="Logo">
+
+<h1>Reading Comprehension</h1>
+
+<!-- Passage -->
+<div class="passage" id="passage"></div>
+
+<!-- Questions -->
+<div id="questionsContainer"></div>
+
+<!-- Feedback message -->
+<div class="feedback" id="feedbackMessage"></div>
+
+<!-- "More Lessons" button -->
+<a href="https://sites.google.com/view/grades-1/home" class="more-lessons-btn">More Lessons</a>
+
+<!-- JavaScript -->
+<script>
+    const passageElement = document.getElementById('passage');
+    const questionsContainer = document.getElementById('questionsContainer');
+    const feedbackMessage = document.getElementById('feedbackMessage');
+
+    // Array of passages with multiple-choice questions and true/false statements
+    const passages = [
+        {
+            text: "The cat is a small animal. It is often kept as a pet. Cats like to chase mice.",
+            questions: [
+                {
+                    question: "What do cats like to chase?",
+                    options: ["Dogs", "Mice", "Birds"],
+                    answer: 1 // index of the correct answer
+                },
+                {
+                    question: "Are cats large animals?",
+                    options: ["True", "False"],
+                    answer: 1 // index of the correct answer (False)
+                }
+            ]
+        },
+        {
+            text: "Tom has a red bicycle. He rides it to school every day. Tom loves his bicycle.",
+            questions: [
+                {
+                    question: "What color is Tom's bicycle?",
+                    options: ["Blue", "Green", "Red"],
+                    answer: 2 // index of the correct answer
+                },
+                {
+                    question: "Tom rides his bicycle to school.",
+                    options: ["True", "False"],
+                    answer: 0 // index of the correct answer (True)
+                }
+            ]
+        },
+        {
+            text: "The sun is bright and warm. It shines during the day. The moon is visible at night.",
+            questions: [
+                {
+                    question: "Is the sun visible at night?",
+                    options: ["True", "False"],
+                    answer: 1 // index of the correct answer (False)
+                },
+                {
+                    question: "The sun is warm.",
+                    options: ["True", "False"],
+                    answer: 0 // index of the correct answer (True)
+                }
+            ]
+        }
+    ];
+
+    let currentPassageIndex = 0; // To track the current passage
+
+    // Function to setup a new reading comprehension exercise
+    function setupExercise() {
+        feedbackMessage.innerText = '';
+        questionsContainer.innerHTML = '';
+
+        // Check if we have more passages
+        if (currentPassageIndex < passages.length) {
+            const currentPassage = passages[currentPassageIndex];
+            passageElement.innerText = currentPassage.text;
+
+            currentPassage.questions.forEach((q, index) => {
+                const questionElement = document.createElement('div');
+                questionElement.classList.add('question');
+                questionElement.innerText = q.question;
+
+                const optionsContainer = document.createElement('div');
+                optionsContainer.classList.add('options');
+
+                q.options.forEach((option, i) => {
+                    const optionElement = document.createElement('div');
+                    optionElement.classList.add('option');
+                    optionElement.innerText = option;
+                    optionElement.onclick = () => checkAnswer(index, i, currentPassage.questions);
+                    optionsContainer.appendChild(optionElement);
+                });
+
+                questionElement.appendChild(optionsContainer);
+                questionsContainer.appendChild(questionElement);
+            });
+        } else {
+            feedbackMessage.innerText = "Congratulations! You've completed all the passages.";
+        }
+    }
+
+    // Function to check the answer
+    function checkAnswer(questionIndex, selectedOption, questions) {
+        const correctAnswer = questions[questionIndex].answer;
+
+        if (selectedOption === correctAnswer) {
+            feedbackMessage.innerText = "Correct!";
+            feedbackMessage.style.color = "green";
+
+            // Check if this was the last question
+            if (questionIndex === questions.length - 1) {
+                currentPassageIndex++; // Move to the next passage
+                setTimeout(setupExercise, 2000); // Setup the next passage after 2 seconds
+            }
+        } else {
+            feedbackMessage.innerText = "Wrong answer. Try again!";
+            feedbackMessage.style.color = "red";
+        }
+    }
+
+    // Start the exercise
+    setupExercise();
+</script>
+
+</body>
+</html>
